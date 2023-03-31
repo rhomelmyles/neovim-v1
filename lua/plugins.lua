@@ -38,18 +38,16 @@ packer.startup(function(use)
   use 'hrsh7th/cmp-path'
   use 'hrsh7th/cmp-cmdline'
   use 'hrsh7th/nvim-cmp'
-  use {
-    "windwp/nvim-autopairs",
-    config = function() require("nvim-autopairs").setup {} end
-  }
+  use "windwp/nvim-autopairs"
   use "L3MON4D3/LuaSnip"
-  use {
-    'nvim-treesitter/nvim-treesitter',
-  }
+  use 'nvim-treesitter/nvim-treesitter'
   use {
     'phaazon/hop.nvim',
     branch = 'v2', -- optional but strongly recommended
   }
   use "simrat39/symbols-outline.nvim"
   use "rmagatti/goto-preview"
+  use "rebelot/kanagawa.nvim"
+  use 'tiagovla/tokyodark.nvim'
 end)
+

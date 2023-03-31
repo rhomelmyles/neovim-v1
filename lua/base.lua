@@ -1,6 +1,8 @@
 vim.cmd('autocmd!')
 
-vim.opt.laststatus    = 3 -- global statusline
+vim.opt.laststatus = 3 -- global statusline
+
+
 
 vim.scriptencoding    = 'utf-8'
 vim.opt.encoding      = 'utf-8'
@@ -50,10 +52,6 @@ vim.opt.cindent = true
 
 vim.opt.undofile = true
 vim.o.undodir = '/tmp/.vim/.undodir'
-
-vim.opt.signcolumn = "auto:3"
-
-
 -- Undercurl
 
 vim.cmd [[

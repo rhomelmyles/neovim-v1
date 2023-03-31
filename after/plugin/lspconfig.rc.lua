@@ -5,17 +5,17 @@ if (not status) then return end
 -- local protocol = require('vim.lsp.protocol')
 
 vim.cmd [[autocmd! ColorScheme * highlight NormalFloat guibg=#1f2335]]
-vim.cmd [[autocmd! ColorScheme * highlight FloatBorder guifg=white guibg=#1f2335]]
+-- vim.cmd [[autocmd! ColorScheme * highlight FloatBorder guifg=white guibg=#1f2335]]
 
 local border = {
-      {"🭽", "FloatBorder"},
-      {"▔", "FloatBorder"},
-      {"🭾", "FloatBorder"},
-      {"▕", "FloatBorder"},
-      {"🭿", "FloatBorder"},
-      {"▁", "FloatBorder"},
-      {"🭼", "FloatBorder"},
-      {"▏", "FloatBorder"},
+  { "🭽", "FloatBorder" },
+  { "▔",  "FloatBorder" },
+  { "🭾", "FloatBorder" },
+  { "▕",  "FloatBorder" },
+  { "🭿", "FloatBorder" },
+  { "▁",  "FloatBorder" },
+  { "🭼", "FloatBorder" },
+  { "▏",  "FloatBorder" },
 }
 
 local orig_util_open_floating_preview = vim.lsp.util.open_floating_preview
@@ -25,19 +25,20 @@ function vim.lsp.util.open_floating_preview(contents, syntax, opts, ...)
   return orig_util_open_floating_preview(contents, syntax, opts, ...)
 end
 
-local handlers =  {
-  ["textDocument/hover"] =  vim.lsp.with(vim.lsp.handlers.hover, {border = border}),
-  ["textDocument/signatureHelp"] =  vim.lsp.with(vim.lsp.handlers.signature_help, {border = border }),
+local handlers = {
+  ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = border }),
+  ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = border }),
 }
 
 local on_attach = function(client, bufnr)
-  if client.server_capabilities.documentFormattingProvider then
-  	vim.api.nvim_command [[augroup Format]]
-  	vim.api.nvim_command [[autocmd! * <buffer>]]
-  	vim.api.nvim_command [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
-  	vim.api.nvim_command [[augroup END]]
-  end
-  client.server_capabilities.documentRangeFormattingProvider = false
+  -- if client.server_capabilities.documentFormattingProvider then
+  --   vim.api.nvim_command [[augroup Format]]
+  --   vim.api.nvim_command [[autocmd! * <buffer>]]
+  --   vim.api.nvim_command [[autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()]]
+  --   vim.api.nvim_command [[augroup END]]
+  -- end
+  client.server_capabilities.documentRangeFormattingProvider = true
+  client.server_capabilities.documentFormattingProvider = true
 end
 
 n.tsserver.setup {
@@ -56,16 +57,16 @@ n.pyright.setup {
       library = vim.api.nvim_get_runtime_file("", true)
     }
   },
-  handlers=handlers,
+  handlers = handlers,
   settings = {
-  python = {
-    analysis = {
-      typeCheckingMode = "off",
-      autoSearchPaths = true,
-      useLibraryCodeForTypes = true
+    python = {
+      analysis = {
+        typeCheckingMode = "off",
+        autoSearchPaths = true,
+        useLibraryCodeForTypes = true
+      }
     }
-  }
-},
+  },
 
 }
 n.lua_ls.setup {
@@ -78,7 +79,29 @@ n.lua_ls.setup {
       library = vim.api.nvim_get_runtime_file("", true)
     }
   },
-  handlers=handlers
+  handlers = handlers
+}
+
+n.volar.setup {
+  on_attach = on_attach,
+  -- handlers = handlers
+  highlight = {
+    enable = true,
+    use_languagetree = true,
+  },
+
+}
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities.textDocument.completion.completionItem.snippetSupport = true
+
+n.cssls.setup {
+  capabilities = capabilities,
+  on_attach = on_attach,
+  handlers = handlers
+}
+
+n.html.setup {
+  capabilities = capabilities,
 }
 
 -- Global mappings.
